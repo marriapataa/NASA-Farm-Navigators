@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Space Farming NASA</title>
+    <style>
+        /* ==================================== */
+        /* ESTILOS EXISTENTES (NASA HELPS FARMING) */
+        /* ==================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e29 0%, #1a1f4b 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .nav-container {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 14, 41, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu li {
+            margin-left: 20px;
+        }
+
+        .nav-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu a.active {
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+        }
+
+        .section {
+            display: none;
+            padding: 100px 20px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Estilos do Game Section (Ajustados para não conflitar) */
+        #game-section {
+            padding-top: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .resource-bar {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .resource-item {
+            text-align: center;
+        }
+
+        .plots-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .plot {
+            height: 100px;
+            background: #2a305a;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .plot:hover {
+            background: #3c426f;
+        }
+
+        .plot-content {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .plot.planted {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            animation: grow 2s infinite alternate;
+        }
+
+        @keyframes grow {
+            from {
+                opacity: 0.8;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:disabled {
+            background: #383e5c;
+            cursor: not-allowed;
+        }
+
+        .storage {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* ==================================== */
+        /* NOVOS ESTILOS (CADASTRO MULTI-STEP) */
+        /* ==================================== */
+        #register-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; 
+            padding: 100px 20px 50px;
+            max-width: none;
+            margin: 0;
+        }
+        
+        .container {
+            display: flex;
+            width: 1000px;
+            max-width: 95%;
+            height: auto;
+            min-height: 600px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .left-panel {
+            flex: 1;
+            background: linear-gradient(rgba(10, 14, 41, 0.7), rgba(10, 14, 41, 0.9)),
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600"><circle cx="100" cy="150" r="80" fill="%234CAF50" opacity="0.2"/><circle cx="300" cy="100" r="60" fill="%23FFC107" opacity="0.2"/><circle cx="200" cy="400" r="100" fill="%23E91E63" opacity="0.1"/></svg>');
+            background-size: cover;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .game-title {
+            font-size: 36px;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .game-subtitle {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #aaa;
+        }
+
+        .features {
+            list-style-type: none;
+            margin-top: 20px;
+        }
+
+        .features li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .features li::before {
+            content: "✓";
+            color: #4CAF50;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .right-panel {
+            flex: 1.2;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+            max-height: 700px;
+        }
+
+        .register-title {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .register-subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+        
+        /* Estilos do Checkbox */
+        .terms {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+
+        .terms input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+
+        .terms label {
+            color: #fff;
+            line-height: 1.5;
+            margin-bottom: 0;
+            display: inline;
+        }
+
+        .terms a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .login {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .login a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login a:hover {
+            text-decoration: underline;
+        }
+
+        /* Estrelas e Planeta (Animações Visuais) */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        .planet {
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle at 30% 30%, #4CAF50, #1a1f4b);
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Barra de Progresso Multi-Step */
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .progress-step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .progress-step.active {
+            background: #4CAF50;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .step-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .step-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .step-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .step-btn.primary {
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+        }
+
+        .step-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        @media (max-width: 950px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .left-panel, .right-panel {
+                padding: 30px;
+            }
+
+            .planet {
+                display: none;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-container">
+        <div class="nav-content">
+            <div class="nav-logo">
+                <div class="nav-logo-text">NASA SPACE FARMING</div>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link" data-section="home-section">Início</a></li>
+                <li><a href="#" class="nav-link active" data-section="register-section">Cadastro</a></li>
+                <li><a href="#" class="nav-link" data-section="game-section">Jogo</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <section id="home-section" class="section">
+            <div class="hero">
+                <h1>Agricultura Espacial da NASA</h1>
+                <p>Jogue, aprenda e contribua para a sobrevivência humana fora da Terra.</p>
+                <button onclick="document.querySelector('[data-section=\'game-section\']').click()" class="btn btn-primary" style="margin-top: 20px;">Começar a Jogar</button>
+            </div>
+        </section>
+
+        <section id="register-section" class="section active">
+            <div class="container">
+                <div class="left-panel">
+                    <div class="logo">
+                        <div class="logo-icon"></div>
+                        <div class="logo-text">NASA SPACE FARMING</div>
+                    </div>
+                    <h1 class="game-title">Junte-se à Missão</h1>
+                    <p class="game-subtitle">Torne-se um agricultor espacial e ajude a alimentar a humanidade no cosmos</p>
+                    
+                    <ul class="features">
+                        <li>Participe de pesquisas reais da NASA</li>
+                        <li>Aprenda técnicas de cultivo em microgravidade</li>
+                        <li>Colabore com uma comunidade global</li>
+                        <li>Contribua para a colonização de Marte</li>
+                        <li>Ganhe reconhecimento por suas descobertas</li>
+                    </ul>
+                    
+                    <div class="stars" id="stars"></div>
+                    <div class="planet"></div>
+                </div>
+                
+                <div class="right-panel">
+                    <h2 class="register-title">Cadastre-se para a Missão</h2>
+                    <p class="register-subtitle">Preencha suas informações para começar sua jornada espacial</p>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-step active">1</div>
+                        <div class="progress-step">2</div>
+                        <div class="progress-step">3</div>
+                    </div>
+                    
+                    <form id="registerForm">
+                        <div class="form-step active" id="step1">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">Nome</label>
+                                    <input type="text" id="firstName" placeholder="Seu nome" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Sobrenome</label>
+                                    <input type="text" id="lastName" placeholder="Seu sobrenome" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">E-mail</label>
+                                <input type="email" id="email" placeholder="seu.email@exemplo.com" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="username">Nome de Usuário</label>
+                                <input type="text" id="username" placeholder="Escolha um nome de usuário" required>
+                            </div>
+                            
+                            <div class="step-navigation">
+                                <div></div> <button type="button" class="step-btn primary" onclick="nextStep(1)">Próximo</button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-step" id="step2">
+                            <div class="form-group">
+                                <label for="password">Senha</label>
+                                <input type="password" id="password" placeholder="Crie uma senha segura" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirmar Senha</label>
+                                <input type="password" id="confirmPassword" placeholder="Digite novamente sua senha" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="birthdate">Data de Nascimento</label>
+                                <input type="date" id="birthdate" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="country">País</label>
+                                <select id="country" required>
+                                    <option value="">Selecione seu país</option>
+                                    <option value="BR">Brasil</option>
+                                    <option value="US">Estados Unidos</option>
+                                    <option value="CA">Canadá</option>
+                                    <option value="UK">Reino Unido</option>
+                                    <option value="AU">Austrália</option>
+                                    <option value="other">Outro</option>
+                                </select>
+                            </div>
+                            
+                            <div class="step-navigation">
+                                <button type="button" class="step-btn" onclick="prevStep(2)">Voltar</button>
+                                <button type="button" class="step-btn primary" onclick="nextStep(2)">Próximo</button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-step" id="step3">
+                            <div class="form-group">
+                                <label for="experience">Experiência com Agricultura</label>
+                                <select id="experience" required>
+                                    <option value="">Selecione sua experiência</option>
+                                    <option value="none">Nenhuma</option>
+                                    <option value="hobby">Hobby/Jardim caseiro</option>
+                                    <option value="student">Estudante de agronomia</option>
+                                    <option value="professional">Profissional da área</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Áreas de Interesse (selecione até 3)</label>
+                                <div style="margin-top: 10px;">
+                                    <div style="margin-bottom: 8px;">
+                                        <input type="checkbox" id="interest1" name="interests" value="hydroponics">
+                                        <label for="interest1" style="display: inline; margin-left: 5px;">Hidroponia</label>
+                                    </div>
+                                    <div style="margin-bottom: 8px;">
+                                        <input type="checkbox" id="interest2" name="interests" value="aeroponics">
+                                        <label for="interest2" style="display: inline; margin-left: 5px;">Aeroponia</label>
+                                    </div>
+                                    <div style="margin-bottom: 8px;">
+                                        <input type="checkbox" id="interest3" name="interests" value="genetics">
+                                        <label for="interest3" style="display: inline; margin-left: 5px;">Genética de Plantas</label>
+                                    </div>
+                                    <div style="margin-bottom: 8px;">
+                                        <input type="checkbox" id="interest4" name="interests" value="sustainability">
+                                        <label for="interest4" style="display: inline; margin-left: 5px;">Sustentabilidade</label>
+                                    </div>
+                                    <div style="margin-bottom: 8px;">
+                                        <input type="checkbox" id="interest5" name="interests" value="research">
+                                        <label for="interest5" style="display: inline; margin-left: 5px;">Pesquisa Científica</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="terms">
+                                <input type="checkbox" id="terms" required>
+                                <label for="terms">Concordo com os <a href="#">Termos de Serviço</a> e <a href="#">Política de Privacidade</a> da NASA Space Farming. Estou ciente de que meus dados podem ser utilizados para pesquisas científicas.</label>
+                            </div>
+                            
+                            <div class="terms">
+                                <input type="checkbox" id="newsletter">
+                                <label for="newsletter">Desejo receber atualizações sobre missões, novidades e oportunidades de pesquisa.</label>
+                            </div>
+                            
+                            <div class="step-navigation">
+                                <button type="button" class="step-btn" onclick="prevStep(3)">Voltar</button>
+                                <button type="submit" class="step-btn primary">Completar Cadastro</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="login">
+                        Já tem uma conta? <a href="#">Entre na estação</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="game-section" class="section">
+            <h2>Sua Estação de Cultivo em Marte</h2>
+            
+            <div class="resource-bar" id="resourceBar">
+                <div class="resource-item">Food: <span id="foodCount">100</span></div>
+                <div class="resource-item">Water: <span id="waterCount">100</span></div>
+                <div class="resource-item">Oxygen: <span id="oxygenCount">100</span></div>
+                <div class="resource-item">Energy: <span id="energyCount">100</span></div>
+            </div>
+
+            <div class="plots-container" id="plotsContainer">
+                <div class="plot" onclick="plant(0)"><div class="plot-content">Plot 1</div></div>
+                <div class="plot" onclick="plant(1)"><div class="plot-content">Plot 2</div></div>
+                <div class="plot" onclick="plant(2)"><div class="plot-content">Plot 3</div></div>
+                <div class="plot" onclick="plant(3)"><div class="plot-content">Plot 4</div></div>
+                <div class="plot" onclick="plant(4)"><div class="plot-content">Plot 5</div></div>
+                <div class="plot" onclick="plant(5)"><div class="plot-content">Plot 6</div></div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" id="plantBtn" onclick="showPlantMenu()">PLANTAR</button>
+                <button class="btn btn-primary" id="harvestBtn" disabled onclick="harvestAll()">COLHER TUDO</button>
+                <button class="btn btn-primary" onclick="showStoreMenu()">LOJA / UPGRADES</button>
+            </div>
+            
+            <div class="storage">
+                <h3>Armazém</h3>
+                <p>Alface: <span id="storage-lettuce">0</span> | Batata: <span id="storage-potato">0</span> | Trigo: <span id="storage-wheat">0</span></p>
+                <p>Leite: <span id="storage-milk">0</span> | Ovos: <span id="storage-eggs">0</span></p>
+            </div>
+        </section>
+    </main>
+    
+    <div id="dialogBox" class="dialog-box">
+        <div class="dialog-avatar">👩‍🔬</div>
+        <div id="dialogText" class="dialog-text">Bem-vindo à Estação de Cultivo em Marte!</div>
+    </div>
+
+    <div id="plantMenu" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#1a1f4b; padding:20px; border-radius:10px; z-index:2000;">
+        <h3>Escolha o que Plantar</h3>
+        <button onclick="selectPlant('lettuce')">Alface</button>
+        <button onclick="selectPlant('potato')">Batata</button>
+        <button onclick="selectPlant('wheat')">Trigo</button>
+        <button onclick="document.getElementById('plantMenu').style.display='none'">Fechar</button>
+    </div>
+
+    <script>
+        // ====================================
+        // LÓGICA EXISTENTE DO JOGO (nasahelpsfarming.html)
+        // ====================================
+        const plots = 6;
+        const gameTickInterval = 3000;
+        let gameLoopInterval;
+        let selectedPlot = null;
+
+        let gameState = {
+            food: 100,
+            water: 100,
+            oxygen: 100,
+            energy: 100,
+            nasaCoins: 50,
+            fertilizer: 5,
+            playerLevel: 1,
+            playerXP: 0,
+            plantedPlots: Array(plots).fill(null),
+            storage: {
+                lettuce: 0,
+                potato: 0,
+                wheat: 0,
+                milk: 0,
+                eggs: 0
+            }
+        };
+
+        const plantsData = {
+            lettuce: { name: 'Alface', icon: '🥬', growthTime: 3, resourceCost: { water: 5, energy: 2 }, harvestXP: 10, harvestFood: 5 },
+            potato: { name: 'Batata', icon: '🥔', growthTime: 5, resourceCost: { water: 8, energy: 5 }, harvestXP: 20, harvestFood: 10 },
+            wheat: { name: 'Trigo', icon: '🌾', growthTime: 7, resourceCost: { water: 10, energy: 7 }, harvestXP: 30, harvestFood: 15 }
+        };
+
+        function initGame() {
+            updateGameUI();
+            document.getElementById('plotsContainer').innerHTML = gameState.plantedPlots.map((plot, index) =>
+                `<div class="plot" onclick="plant(${index})"><div class="plot-content">Plot ${index + 1}</div></div>`
+            ).join('');
+            gameLoopInterval = setInterval(gameLoop, gameTickInterval);
+
+            // Garante que o cadastro esteja ativo ao carregar (para a primeira visita)
+            document.getElementById('register-section').classList.add('active');
+            document.querySelector('[data-section="register-section"]').classList.add('active');
+        }
+
+        function gameLoop() {
+            // Consumo de recursos
+            gameState.food -= 1;
+            gameState.water -= 1;
+            gameState.oxygen -= 1;
+            gameState.energy -= 1;
+
+            // Crescimento das plantas
+            gameState.plantedPlots.forEach(plot => {
+                if (plot && !plot.harvestable) {
+                    plot.growthProgress++;
+                    if (plot.growthProgress >= plot.plantData.growthTime) {
+                        plot.harvestable = true;
+                        showDialog(`🎉 Suas ${plot.plantData.name} no Plot ${plot.plotIndex + 1} estão prontas para a colheita!`, plot.plantData.icon);
+                        document.querySelector(`#plotsContainer .plot:nth-child(${plot.plotIndex + 1})`).classList.add('ready');
+                    }
+                }
+            });
+
+            checkGameOver();
+            updateGameUI();
+        }
+
+        function checkGameOver() {
+            if (gameState.food <= 0 || gameState.water <= 0 || gameState.oxygen <= 0 || gameState.energy <= 0) {
+                clearInterval(gameLoopInterval);
+                showDialog('GAME OVER! Você ficou sem recursos vitais. Tente novamente!', '💀');
+                // Adicionar lógica de reinício aqui
+            }
+        }
+
+        function showPlantMenu() {
+            document.getElementById('plantMenu').style.display = 'block';
+        }
+
+        function selectPlant(plantKey) {
+            if (selectedPlot !== null) {
+                const plantData = plantsData[plantKey];
+                const plotElement = document.querySelector(`#plotsContainer .plot:nth-child(${selectedPlot + 1})`);
+                
+                // Verifica se o custo de plantio pode ser coberto
+                if (gameState.water >= plantData.resourceCost.water && gameState.energy >= plantData.resourceCost.energy) {
+                    
+                    gameState.water -= plantData.resourceCost.water;
+                    gameState.energy -= plantData.resourceCost.energy;
+
+                    gameState.plantedPlots[selectedPlot] = {
+                        plotIndex: selectedPlot,
+                        plantData: plantData,
+                        growthProgress: 0,
+                        harvestable: false
+                    };
+
+                    plotElement.classList.remove('empty');
+                    plotElement.classList.add('planted');
+                    plotElement.querySelector('.plot-content').textContent = `${plantData.icon} - 0/${plantData.growthTime}`;
+                    showDialog(`Você plantou ${plantData.name} no Plot ${selectedPlot + 1}.`, '🌱');
+                } else {
+                    showDialog(`Recursos insuficientes para plantar ${plantData.name}.`, '❌');
+                }
+            }
+            document.getElementById('plantMenu').style.display = 'none';
+            updateGameUI();
+            selectedPlot = null;
+        }
+
+
+        function plant(plotIndex) {
+            if (gameState.plantedPlots[plotIndex] === null) {
+                selectedPlot = plotIndex;
+                showPlantMenu();
+            } else if (gameState.plantedPlots[plotIndex] && gameState.plantedPlots[plotIndex].harvestable) {
+                harvest(plotIndex);
+            } else {
+                const plantName = gameState.plantedPlots[plotIndex].plantData.name;
+                showDialog(`A ${plantName} no Plot ${plotIndex + 1} ainda está crescendo.`, '⏳');
+            }
+        }
+
+        function harvest(plotIndex) {
+            const plot = gameState.plantedPlots[plotIndex];
+            if (plot && plot.harvestable) {
+                // Adiciona ao armazém
+                gameState.storage[plot.plantData.key] = (gameState.storage[plot.plantData.key] || 0) + 1;
+                
+                // Restaura recursos e dá XP
+                gameState.food += plot.plantData.harvestFood;
+                gameState.playerXP += plot.plantData.harvestXP;
+                
+                // Limpa o plot
+                gameState.plantedPlots[plotIndex] = null;
+                
+                const plotElement = document.querySelector(`#plotsContainer .plot:nth-child(${plotIndex + 1})`);
+                plotElement.classList.remove('planted', 'ready');
+                plotElement.querySelector('.plot-content').textContent = `Plot ${plotIndex + 1}`;
+                
+                showDialog(`Colheita de ${plot.plantData.name} concluída! (+${plot.plantData.harvestFood} Comida)`, '✅');
+                updateGameUI();
+            }
+        }
+
+        function harvestAll() {
+            gameState.plantedPlots.forEach((plot, index) => {
+                if (plot && plot.harvestable) {
+                    harvest(index);
+                }
+            });
+        }
+        
+        function updateGameUI() {
+            document.getElementById('foodCount').textContent = gameState.food;
+            document.getElementById('waterCount').textContent = gameState.water;
+            document.getElementById('oxygenCount').textContent = gameState.oxygen;
+            document.getElementById('energyCount').textContent = gameState.energy;
+            
+            // Atualiza armazém
+            document.getElementById('storage-lettuce').textContent = gameState.storage.lettuce;
+            document.getElementById('storage-potato').textContent = gameState.storage.potato;
+            document.getElementById('storage-wheat').textContent = gameState.storage.wheat;
+            
+            // Atualiza estado dos botões
+            const hasHarvestable = gameState.plantedPlots.some(plot => plot && plot.harvestable);
+            document.getElementById('harvestBtn').disabled = !hasHarvestable;
+        }
+
+        function showDialog(message, icon = '👩‍🔬') {
+            const dialogBox = document.getElementById('dialogBox');
+            const dialogText = document.getElementById('dialogText');
+            
+            dialogText.textContent = message;
+            document.querySelector('.dialog-avatar').textContent = icon;
+            dialogBox.classList.add('show');
+            
+            setTimeout(hideDialog, 4000);
+        }
+
+        function hideDialog() {
+            document.getElementById('dialogBox').classList.remove('show');
+        }
+
+        // ===========================
+        // LÓGICA DE NAVEGAÇÃO (Mantida)
+        // ===========================
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetSection = e.target.getAttribute('data-section');
+                
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                document.querySelectorAll('.nav-link').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                
+                document.getElementById(targetSection).classList.add('active');
+                e.target.classList.add('active');
+                
+                window.scrollTo(0, 0);
+            });
+        });
+
+
+        // ====================================
+        // NOVO JAVASCRIPT (LÓGICA DO CADASTRO)
+        // ====================================
+        
+        // Criar estrelas cintilantes
+        const starsContainer = document.getElementById('stars');
+        if (starsContainer) {
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        function nextStep(step) {
+            // Validação de campos antes de avançar (simples)
+            const currentForm = document.getElementById(`step${step}`);
+            const requiredFields = currentForm.querySelectorAll('[required]');
+            
+            let allValid = true;
+            requiredFields.forEach(field => {
+                if (!field.value || (field.type === 'checkbox' && !field.checked)) {
+                    allValid = false;
+                    field.style.borderColor = '#ff6b6b';
+                } else {
+                    field.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                }
+            });
+            
+            if (!allValid) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            document.getElementById(`step${step}`).classList.remove('active');
+            document.getElementById(`step${step + 1}`).classList.add('active');
+            
+            // Atualizar a barra de progresso
+            document.querySelectorAll('.progress-step').forEach((el, index) => {
+                if (index <= step) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+        }
+        
+        function prevStep(step) {
+            document.getElementById(`step${step}`).classList.remove('active');
+            document.getElementById(`step${step - 1}`).classList.add('active');
+            
+            // Atualizar a barra de progresso
+            document.querySelectorAll('.progress-step').forEach((el, index) => {
+                if (index < step - 1) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+        }
+        
+        // Validação final do formulário
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validar interesses (máximo 3)
+            const interests = document.querySelectorAll('input[name="interests"]:checked');
+            if (interests.length > 3) {
+                alert('Por favor, selecione no máximo 3 áreas de interesse.');
+                return;
+            }
+            
+            // Validar senhas
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('As senhas não coincidem. Por favor, verifique.');
+                // Highlight password fields
+                document.getElementById('password').style.borderColor = '#ff6b6b';
+                document.getElementById('confirmPassword').style.borderColor = '#ff6b6b';
+                return;
+            }
+            
+            // Simulação de cadastro bem-sucedido
+            const firstName = document.getElementById('firstName').value;
+            alert(`Cadastro concluído com sucesso, ${firstName}! Bem-vindo(a) à missão Space Farming da NASA. Você será redirecionado para a página do jogo.`);
+            
+            // Redireciona para a seção do jogo após o cadastro
+            document.querySelector('[data-section="game-section"]').click();
+        });
+        
+        // Limitar seleção de interesses a 3
+        document.querySelectorAll('input[name="interests"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const checked = document.querySelectorAll('input[name="interests"]:checked');
+                if (checked.length > 3) {
+                    this.checked = false;
+                    alert('Você pode selecionar no máximo 3 áreas de interesse.');
+                }
+            });
+        });
+
+        // ===========================
+        // INICIALIZAÇÃO GERAL
+        // ===========================
+        window.onload = initGame;
+    </script>
+</body>
+</html>
